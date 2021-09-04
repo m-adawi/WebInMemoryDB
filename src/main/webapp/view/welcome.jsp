@@ -3,5 +3,5 @@
 <title>Yahoo!!</title>
 </head>
 <body>
-Welcome ${name}.
+Welcome to my Tomcat server ${name} .
 </html>
