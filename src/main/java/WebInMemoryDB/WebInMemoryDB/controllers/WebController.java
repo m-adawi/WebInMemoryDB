@@ -27,4 +27,5 @@ public class WebController {
         String query = request.getParameter("query");
         return dao.executeDatabaseQuery(query);
     }
+
 }
