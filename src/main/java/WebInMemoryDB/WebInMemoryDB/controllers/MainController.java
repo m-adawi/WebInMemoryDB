@@ -1,7 +1,13 @@
 package WebInMemoryDB.WebInMemoryDB.controllers;
 
+import DB.CommandGenerators.CommandsGenerator;
+import DB.Commands.Command;
+import DB.Commands.SelectCommand;
+import DB.Database;
+import DB.InvalidDatabaseOperationException;
 import WebInMemoryDB.WebInMemoryDB.DAO.DatabaseDAO;
 import WebInMemoryDB.WebInMemoryDB.DAO.UsersDAO;
+import org.gibello.zql.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,20 +23,9 @@ import javax.xml.ws.Service;
 
 @Controller
 public class MainController {
-    @Autowired
-    DatabaseDAO dao;
-
-
     @GetMapping("/")
     String in(Model model, Authentication auth) {
         model.addAttribute("isAdmin", auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")));
         return "home";
-    }
-
-    @ResponseBody
-    @PostMapping("/")
-    String serveQuery(HttpServletRequest request, Model model) {
-        String query = request.getParameter("query");
-        return dao.executeDatabaseQuery(query);
     }
 }

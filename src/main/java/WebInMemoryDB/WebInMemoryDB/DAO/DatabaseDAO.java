@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseDAO {
-    private CommandsGenerator commandsGenerator = CommandsGenerator.getCommandGenerator();
-    private Database database = Database.getDatabase();
+    private final CommandsGenerator commandsGenerator = CommandsGenerator.getCommandGenerator();
+    private final Database database = Database.getDatabase();
 
-    public String executeDatabaseQuery(String query) {
+    public String executeSQLCommand(String query) {
         try {
             Command command = commandsGenerator.generateFromSqlQuery(query);
             return database.execute(command);
