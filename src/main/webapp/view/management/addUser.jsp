@@ -20,8 +20,8 @@
                     </select>
                 </td>
             </tr>
-            <tr> <td> User name:</td><td> <input name="username" type="text" /> </td>
-            <tr> <td> Password : </td> <td><input name="password" type="password" /> </td>
+            <tr> <td> User name:</td><td> <input name="username" type="text" /> </td> </tr>
+            <tr> <td> Password : </td> <td><input name="password" type="password" /> </td> </tr>
         </table>
         <input type="submit" value="Add user"/>
         </form>

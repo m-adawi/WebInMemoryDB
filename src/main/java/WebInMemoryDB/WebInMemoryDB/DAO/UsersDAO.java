@@ -2,6 +2,7 @@ package WebInMemoryDB.WebInMemoryDB.DAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -32,5 +33,18 @@ public class UsersDAO {
         jdbcTemplate.update("delete from authorities where username = ?", username);
         int numberOfDeletedRows = jdbcTemplate.update("delete from users where username = ?", username);
         return numberOfDeletedRows != 0;
+    }
+
+    public boolean areValidCredentials(String username, String password) {
+        try {
+            String passwordHash = jdbcTemplate.queryForObject("select password from users where username = ?", String.class, username);
+            return passwordEncoder.matches(password, passwordHash);
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+    }
+
+    public void changePassword(String username, String password) {
+        jdbcTemplate.update("update users set password = ? where username = ?", passwordEncoder.encode(password), username);
     }
 }

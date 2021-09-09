@@ -1,1 +1,1 @@
-<p> <a href="/"> home </a> </p>
+<p> <a href="/">Home</a> | <a href="account">Account</a> </p>
