@@ -1,5 +1,7 @@
 package WebInMemoryDB.WebInMemoryDB.config;
 
+import DB.CommandGenerators.CommandsGenerator;
+import DB.Database;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -17,5 +19,15 @@ public class BeansConfig {
         ds.setUsername("admin");
         ds.setPassword("admin");
         return ds;
+    }
+
+    @Bean
+    CommandsGenerator commandsGenerator() {
+        return CommandsGenerator.getCommandGenerator();
+    }
+
+    @Bean
+    Database database() {
+        return Database.getDatabase();
     }
 }

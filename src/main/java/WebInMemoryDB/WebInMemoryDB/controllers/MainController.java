@@ -1,7 +1,13 @@
 package WebInMemoryDB.WebInMemoryDB.controllers;
 
+import DB.CommandGenerators.CommandsGenerator;
+import DB.Commands.Command;
+import DB.Commands.SelectCommand;
+import DB.Database;
+import DB.InvalidDatabaseOperationException;
 import WebInMemoryDB.WebInMemoryDB.DAO.DatabaseDAO;
 import WebInMemoryDB.WebInMemoryDB.DAO.UsersDAO;
+import org.gibello.zql.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,8 +35,21 @@ public class MainController {
 
     @ResponseBody
     @PostMapping("/")
-    String serveQuery(HttpServletRequest request, Model model) {
-        String query = request.getParameter("query");
-        return dao.executeDatabaseQuery(query);
+    String serveQuery(@RequestParam String query, Model model) {
+        return dao.executeSQLCommand(query);
+    }
+
+    @GetMapping("/test")
+    String test(Model model) {
+        CommandsGenerator commandsGenerator = CommandsGenerator.getCommandGenerator();
+        Database database = Database.getDatabase();
+        try {
+            Command command = commandsGenerator.generateFromSqlQuery("select * from students;");
+            String[][] table = database.executeQuery((SelectCommand) command);
+            model.addAttribute("rows", table);
+        } catch (ParseException | InvalidDatabaseOperationException e) {
+            System.out.println(e.getMessage());
+        }
+        return "testTable";
     }
 }
