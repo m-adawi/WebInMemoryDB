@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +13,7 @@ import javax.sql.DataSource;
 @Component
 @Scope("singleton")
 public class UsersDAO {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
     @Autowired
     PasswordEncoder passwordEncoder;
 
@@ -48,10 +49,29 @@ public class UsersDAO {
         jdbcTemplate.update("update users set password = ? where username = ?", passwordEncoder.encode(password), username);
     }
 
+    public boolean isAllowedToWrite(Authentication auth) {
+        return auth.getAuthorities().stream().anyMatch(a ->
+                a.getAuthority().equals("ROLE_ADMIN") ||
+                a.getAuthority().equals("ROLE_WRITER"));
+    }
+
     public boolean isAllowedToWrite(String username) {
+        String role = getRole(username);
+        return role.equals("ADMIN") || role.equals("WRITER");
+    }
+
+    public boolean isAdmin(Authentication auth) {
+        return auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    public boolean isAdmin(String username) {
+        return getRole(username).equals("ADMIN");
+    }
+
+    private String getRole(String username) {
         String authority = jdbcTemplate.queryForObject("select authority from authorities where username = ?", String.class, username);
         if(authority == null)
-            return false;
-        return authority.equals("ROLE_ADMIN") || authority.equals("ROLE_WRITER");
+            return "";
+        return authority.replaceFirst("^ROLE_", "");
     }
 }

@@ -44,7 +44,7 @@ public class SQLCommandsController {
                 model.addAttribute("rows", table);
             } else {
                 String result;
-                if(usersDAO.isAllowedToWrite(auth.getName()))
+                if(usersDAO.isAllowedToWrite(auth))
                     result = database.execute(command);
                 else
                     result = "Not permitted";
