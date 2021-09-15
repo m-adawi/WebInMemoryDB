@@ -8,10 +8,11 @@
 <body>
     <jsp:include page="/header.jsp" />
     <form method="POST">
-        Database query : <input name="query" type="text" size="100"/>
+        Database query : <input name="query" type="text" size="100" value="${sqlcommand}"/>
         <input type="submit" value="Submit"/>
     </form>
     ${message}
+    <p>
     <table border = "1" width = "50%">
         <c:forEach var="row" items="${rows}">
             <tr>
@@ -21,6 +22,7 @@
              </tr>
         </c:forEach>
     </table>
+    </p>
     <jsp:include page="/footer.jsp" />
 </body>
 </html>

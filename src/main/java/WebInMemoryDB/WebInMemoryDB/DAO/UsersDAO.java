@@ -47,4 +47,11 @@ public class UsersDAO {
     public void changePassword(String username, String password) {
         jdbcTemplate.update("update users set password = ? where username = ?", passwordEncoder.encode(password), username);
     }
+
+    public boolean isAllowedToWrite(String username) {
+        String authority = jdbcTemplate.queryForObject("select authority from authorities where username = ?", String.class, username);
+        if(authority == null)
+            return false;
+        return authority.equals("ROLE_ADMIN") || authority.equals("ROLE_WRITER");
+    }
 }

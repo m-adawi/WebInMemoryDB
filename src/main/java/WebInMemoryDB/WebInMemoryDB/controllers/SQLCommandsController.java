@@ -6,6 +6,7 @@ import DB.Commands.Command;
 import DB.Commands.SelectCommand;
 import DB.Database;
 import DB.InvalidDatabaseOperationException;
+import WebInMemoryDB.WebInMemoryDB.DAO.UsersDAO;
 import org.gibello.zql.ParseException;
 import org.gibello.zql.TokenMgrError;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class SQLCommandsController {
     CommandsGenerator commandsGenerator;
     @Autowired
     Database database;
+    @Autowired
+    UsersDAO usersDAO;
 
     @GetMapping
     String getPage() {
@@ -41,7 +44,7 @@ public class SQLCommandsController {
                 model.addAttribute("rows", table);
             } else {
                 String result;
-                if(isAllowedToWrite(auth))
+                if(usersDAO.isAllowedToWrite(auth.getName()))
                     result = database.execute(command);
                 else
                     result = "Not permitted";
@@ -50,12 +53,7 @@ public class SQLCommandsController {
         } catch (ParseException | TokenMgrError | InvalidDatabaseOperationException | UnsupportedSQLStatementException e) {
             model.addAttribute("message", e.getMessage());
         }
+        model.addAttribute("sqlcommand", query);
         return "sql";
-    }
-
-    private boolean isAllowedToWrite(Authentication auth) {
-        return auth.getAuthorities().stream().anyMatch(a ->
-                a.getAuthority().equals("ROLE_WRITER") ||
-                a.getAuthority().equals("ROLE_ADMIN"));
     }
 }
