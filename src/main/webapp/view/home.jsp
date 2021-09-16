@@ -11,8 +11,8 @@
         </c:if>
         <c:if test="${isWriter}">
             <p><a href="write/insert"> Insert Records </a></p>
-            <p><a href="write/delete"> Update Records </a></p>
-            <p><a href="write/update"> Delete Records </a></p>
+            <p><a href="write/delete"> Delete Records </a></p>
+            <p><a href="write/update"> Update Records </a></p>
         </c:if>
         <p><a href="read/select"> Select Records </a></p>
         <p><a href="sql">SQL command</a></p>

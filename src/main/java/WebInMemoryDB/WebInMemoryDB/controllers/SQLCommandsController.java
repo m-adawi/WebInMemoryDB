@@ -6,6 +6,7 @@ import DB.Commands.Command;
 import DB.Commands.SelectCommand;
 import DB.Database;
 import DB.InvalidDatabaseOperationException;
+import DB.Storages.RecordNotFoundException;
 import WebInMemoryDB.WebInMemoryDB.DAO.UsersDAO;
 import org.gibello.zql.ParseException;
 import org.gibello.zql.TokenMgrError;
@@ -50,7 +51,8 @@ public class SQLCommandsController {
                     result = "Not permitted";
                 model.addAttribute("message", result);
             }
-        } catch (ParseException | TokenMgrError | InvalidDatabaseOperationException | UnsupportedSQLStatementException e) {
+        } catch (ParseException | TokenMgrError | RecordNotFoundException
+                | InvalidDatabaseOperationException | UnsupportedSQLStatementException e) {
             model.addAttribute("message", e.getMessage());
         }
         model.addAttribute("sqlcommand", query);

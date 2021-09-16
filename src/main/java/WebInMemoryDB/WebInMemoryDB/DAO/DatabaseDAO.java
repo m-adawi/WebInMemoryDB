@@ -1,8 +1,11 @@
 package WebInMemoryDB.WebInMemoryDB.DAO;
 
+import DB.Attributes.IntegerDatabaseKey;
 import DB.CommandGenerators.CommandsGenerator;
 import DB.Commands.Command;
+import DB.Commands.DeleteCommand;
 import DB.Commands.InsertRecordCommand;
+import DB.Conditions.IDEqualCondition;
 import DB.Database;
 import DB.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,11 @@ public class DatabaseDAO {
 
     public void insertRecord(Record record) {
         Command command = new InsertRecordCommand(record);
+        database.execute(command);
+    }
+
+    public void deleteRecord(String id) {
+        Command command = new DeleteCommand(new IDEqualCondition(new IntegerDatabaseKey(id)));
         database.execute(command);
     }
 }
