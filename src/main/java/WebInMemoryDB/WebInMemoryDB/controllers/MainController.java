@@ -16,6 +16,7 @@ public class MainController {
     @GetMapping("/")
     String in(Model model, Authentication auth) {
         model.addAttribute("isAdmin", usersDAO.isAdmin(auth));
+        model.addAttribute("isWriter", usersDAO.isAllowedToWrite(auth));
         return "home";
     }
 }
