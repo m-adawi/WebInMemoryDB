@@ -31,25 +31,12 @@ public class InsertController {
             model.addAttribute("error", "You must provide an ID");
         } else {
             try {
-                databaseDAO.insertRecord(generateRecord(formData));
+                databaseDAO.insertRecord(databaseDAO.generateRecord(formData));
                 model.addAttribute("success", "Inserted a record successfully");
             } catch (InvalidDatabaseOperationException e) {
                 model.addAttribute("error", e.getMessage());
             }
         }
         return getPage(model);
-    }
-
-    private Record generateRecord(HashMap<String, String> formData) {
-        Record record = new Record(new StudentID(formData.get(StudentAttributeType.ID.name())));
-        for (StudentAttributeType type : StudentAttributeType.values()) {
-            if (type.equals(StudentAttributeType.ID))
-                continue;
-            String attributeStrVal = formData.get(type.name());
-            if(attributeStrVal.equals(""))
-                continue;
-            record.setAttributeFromTypeAndStrValue(type, attributeStrVal);
-        }
-        return record;
     }
 }

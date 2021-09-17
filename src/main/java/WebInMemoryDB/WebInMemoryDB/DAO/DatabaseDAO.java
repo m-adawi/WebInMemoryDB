@@ -1,6 +1,8 @@
 package WebInMemoryDB.WebInMemoryDB.DAO;
 
 import DB.Attributes.IntegerDatabaseKey;
+import DB.Attributes.StudentAttributeType;
+import DB.Attributes.StudentID;
 import DB.CommandGenerators.CommandsGenerator;
 import DB.Commands.Command;
 import DB.Commands.DeleteCommand;
@@ -10,6 +12,8 @@ import DB.Database;
 import DB.Record;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
 
 @Component
 public class DatabaseDAO {
@@ -27,13 +31,36 @@ public class DatabaseDAO {
         }
     }
 
+    public Record generateRecord(HashMap<String, String> formData) {
+        Record record = new Record(new StudentID(formData.get(StudentAttributeType.ID.name())));
+        for (StudentAttributeType type : StudentAttributeType.values()) {
+            if (type.equals(StudentAttributeType.ID))
+                continue;
+            String attributeStrVal = formData.get(type.name());
+            if(attributeStrVal.equals(""))
+                continue;
+            record.setAttributeFromTypeAndStrValue(type, attributeStrVal);
+        }
+        return record;
+    }
+
     public void insertRecord(Record record) {
-        Command command = new InsertRecordCommand(record);
-        database.execute(command);
+        database.insertRecord(record);
     }
 
     public void deleteRecord(String id) {
-        Command command = new DeleteCommand(new IDEqualCondition(new IntegerDatabaseKey(id)));
-        database.execute(command);
+        database.deleteRecordByKey(new IntegerDatabaseKey(id));
+    }
+
+    public boolean containsID(String id) {
+        return database.getKeysCollection().containsKey(new IntegerDatabaseKey(id));
+    }
+
+    public Record selectRecord(String id) {
+        return database.selectRecordByKey(new IntegerDatabaseKey(id));
+    }
+
+    public void updateRecord(String id, Record record) {
+        database.updateRecordByKey(new IntegerDatabaseKey(id), record);
     }
 }
