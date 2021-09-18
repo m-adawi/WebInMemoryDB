@@ -38,6 +38,8 @@ public class SelectController {
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
         }
+        if(selectedAttributes.getSelectedAttributes().length == 0)
+            model.addAttribute("error", "You must select at least one attribute");
         return new ModelAndView("db/select", "command", selectedAttributes);
     }
 
