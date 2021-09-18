@@ -34,7 +34,6 @@ public class SelectController {
                          Model model) {
         try {
             String sql = generateSqlCommand(selectedAttributes);
-            System.out.println(sql);
             model.addAttribute("rows", databaseDAO.executeQuery(sql));
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
