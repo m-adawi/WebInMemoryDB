@@ -55,4 +55,10 @@ public class ManagementController {
             model.addAttribute("fail", "No such user: "+ username);
         return getRemoveUserPage();
     }
+
+    @GetMapping("/list")
+    String listUsers(Model model) {
+        model.addAttribute("users", usersDAO.getUsers());
+        return "management/list";
+    }
 }

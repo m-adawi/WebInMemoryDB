@@ -1,5 +1,6 @@
 package WebInMemoryDB.WebInMemoryDB.DAO;
 
+import WebInMemoryDB.WebInMemoryDB.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -9,6 +10,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Scope("singleton")
@@ -73,5 +77,17 @@ public class UsersDAO {
         if(authority == null)
             return "";
         return authority.replaceFirst("^ROLE_", "");
+    }
+
+    public List<User> getUsers() {
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("select username, authority from authorities");
+        List<User> users = new ArrayList<>();
+        for(Map map : list) {
+            User user = new User();
+            user.setUsername(map.get("username").toString());
+            user.setRole(map.get("authority").toString().replaceFirst("^ROLE_", ""));
+            users.add(user);
+        }
+        return users;
     }
 }
