@@ -7,9 +7,11 @@ import DB.CommandGenerators.CommandsGenerator;
 import DB.Commands.Command;
 import DB.Commands.DeleteCommand;
 import DB.Commands.InsertRecordCommand;
+import DB.Commands.SelectCommand;
 import DB.Conditions.IDEqualCondition;
 import DB.Database;
 import DB.Record;
+import org.gibello.zql.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -62,5 +64,10 @@ public class DatabaseDAO {
 
     public void updateRecord(String id, Record record) {
         database.updateRecordByKey(new IntegerDatabaseKey(id), record);
+    }
+
+    public String[][] executeQuery(String sql) throws ParseException {
+        Command command = commandsGenerator.generateFromSqlQuery(sql);
+        return database.executeQuery((SelectCommand) command);
     }
 }
